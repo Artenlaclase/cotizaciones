@@ -2,6 +2,8 @@
   "name": "cotizacionapp",
   "type": "module",
   "version": "0.0.1",
+  "private": true,
+  "description": "Astro project for generating PDF quotes",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,6 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.7.12"
+    "astro": "^5.7.12",
+    "jspdf": "^3.0.1"
   }
 }
