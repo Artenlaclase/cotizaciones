@@ -1,0 +1,269 @@
+---
+// src/components/CotizacionForm.astro
+import { jsPDF } from 'jspdf';
+
+// Definición de tipos para TypeScript
+type FormData = {
+  nombreProyecto: string;
+  tipoProducto: string;
+  objetivo: string;
+  funcionalidades: string;
+  tecnologias: string;
+  integraciones: string;
+  diseno: string;
+  fases: string;
+  entregables: string;
+  tiempoEstimado: string;
+  costoDesarrollo: string;
+  costoDiseno: string;
+  hosting: string;
+  dominio: string;
+  mantenimiento: string;
+  total: string;
+  pago: string;
+  garantia: string;
+  propiedad: string;
+};
+
+// Script del lado del cliente
+---
+<script is:inline>
+document.getElementById('cotizacionForm')?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  
+  const form = event.target instanceof HTMLFormElement ? event.target : null;
+  if (!form) return;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+  
+  // Generar PDF
+  const doc = new jsPDF();
+  
+  // Logo
+  const img = new Image();
+  img.src = '/logo.png';
+  doc.addImage(img, 'PNG', 10, 10, 50, 20);
+  
+  // Título
+  doc.setFontSize(20);
+  doc.text('Cotización Oceánica Web', 105, 20, { align: 'center' });
+  
+  // Información del proyecto
+  doc.setFontSize(14);
+  doc.text(`Nombre del proyecto: ${data.nombreProyecto}`, 15, 40);
+  doc.text(`Tipo de producto: ${data.tipoProducto}`, 15, 50);
+  doc.text(`Objetivo principal: ${data.objetivo}`, 15, 60);
+  
+  // Requisitos técnicos
+  doc.text('Requisitos Técnicos:', 15, 75);
+  doc.text(`- Funcionalidades: ${data.funcionalidades}`, 20, 85);
+  doc.text(`- Tecnologías: ${data.tecnologias}`, 20, 95);
+  doc.text(`- Integraciones: ${data.integraciones}`, 20, 105);
+  doc.text(`- Diseño: ${data.diseno}`, 20, 115);
+  
+  // Alcance del trabajo
+  doc.text('Alcance del Trabajo:', 15, 130);
+  doc.text(`- Fases: ${data.fases}`, 20, 140);
+  doc.text(`- Entregables: ${data.entregables}`, 20, 150);
+  doc.text(`- Tiempo estimado: ${data.tiempoEstimado} semanas`, 20, 160);
+  
+  // Costos
+  doc.text('Costos Desglosados:', 15, 175);
+  doc.text(`- Desarrollo: $${data.costoDesarrollo}`, 20, 185);
+  doc.text(`- Diseño UI/UX: $${data.costoDiseno}`, 20, 195);
+  doc.text(`- Hosting: ${data.hosting === 'si' ? '$37,000 anual' : 'No incluido'}`, 20, 205);
+  doc.text(`- Dominio: ${data.dominio === 'si' ? 'Incluido' : 'No incluido'}`, 20, 215);
+  doc.text(`- Mantenimiento: $${data.mantenimiento}`, 20, 225);
+  doc.text(`TOTAL ESTIMADO: $${data.total}`, 20, 240);
+  
+  // Términos y condiciones
+  doc.text('Términos y Condiciones:', 15, 255);
+  doc.text(`- Pago: ${data.pago}`, 20, 265);
+  doc.text(`- Garantía: ${data.garantia}`, 20, 275);
+  doc.text(`- Propiedad intelectual: ${data.propiedad}`, 20, 285);
+  
+  // Notas finales
+  doc.text('Notas:', 15, 300);
+  doc.text('- Los precios son válidos por 30 días', 20, 310);
+  doc.text('- El proyecto comenzará con el 50% de anticipo', 20, 320);
+  
+  // Guardar PDF
+  doc.save(`cotizacion_${data.nombreProyecto}.pdf`);
+});
+</script>
+
+<form id="cotizacionForm" class="form-container">
+  <h3>Información del Proyecto</h3>
+  <div class="form-group">
+    <label for="nombreProyecto">Nombre del proyecto:</label>
+    <input type="text" id="nombreProyecto" name="nombreProyecto" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="tipoProducto">Tipo de producto:</label>
+    <select id="tipoProducto" name="tipoProducto" required>
+      <option value="">Seleccione...</option>
+      <option value="Landing Page">Landing Page</option>
+      <option value="Sitio web corporativo">Sitio web corporativo</option>
+      <option value="E-commerce">E-commerce</option>
+      <option value="App nativa">App nativa</option>
+      <option value="App híbrida">App híbrida</option>
+      <option value="Aplicación web">Aplicación web</option>
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label for="objetivo">Objetivo principal:</label>
+    <textarea id="objetivo" name="objetivo" required></textarea>
+  </div>
+  
+  <h3>Requisitos Técnicos</h3>
+  <div class="form-group">
+    <label for="funcionalidades">Funcionalidades clave:</label>
+    <textarea id="funcionalidades" name="funcionalidades" required></textarea>
+  </div>
+  
+  <div class="form-group">
+    <label for="tecnologias">Tecnologías preferidas:</label>
+    <input type="text" id="tecnologias" name="tecnologias" />
+  </div>
+  
+  <div class="form-group">
+    <label for="integraciones">Integraciones:</label>
+    <input type="text" id="integraciones" name="integraciones" />
+  </div>
+  
+  <div class="form-group">
+    <label for="diseno">Diseño:</label>
+    <select id="diseno" name="diseno" required>
+      <option value="Responsive">Responsive</option>
+      <option value="UI/UX personalizado">UI/UX personalizado</option>
+      <option value="Branding incluido">Branding incluido</option>
+    </select>
+  </div>
+  
+  <h3>Alcance del Trabajo</h3>
+  <div class="form-group">
+    <label for="fases">Fases del proyecto:</label>
+    <input type="text" id="fases" name="fases" value="Diseño, desarrollo, testing, lanzamiento" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="entregables">Entregables:</label>
+    <input type="text" id="entregables" name="entregables" value="Código fuente, documentación, capacitación" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="tiempoEstimado">Tiempo estimado (semanas):</label>
+    <input type="number" id="tiempoEstimado" name="tiempoEstimado" required />
+  </div>
+  
+  <h3>Costos Desglosados</h3>
+  <div class="form-group">
+    <label for="costoDesarrollo">Desarrollo:</label>
+    <input type="number" id="costoDesarrollo" name="costoDesarrollo" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="costoDiseno">Diseño UI/UX:</label>
+    <input type="number" id="costoDiseno" name="costoDiseno" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="hosting">Incluye hosting:</label>
+    <select id="hosting" name="hosting" required>
+      <option value="si">Sí ($37,000 anual)</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label for="dominio">Incluye dominio:</label>
+    <select id="dominio" name="dominio" required>
+      <option value="no">No</option>
+      <option value="si">Sí</option>
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label for="mantenimiento">Mantenimiento post-lanzamiento:</label>
+    <input type="number" id="mantenimiento" name="mantenimiento" value="0" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="total">Total estimado:</label>
+    <input type="number" id="total" name="total" required />
+  </div>
+  
+  <h3>Términos y Condiciones</h3>
+  <div class="form-group">
+    <label for="pago">Forma de pago:</label>
+    <input type="text" id="pago" name="pago" value="50% inicial, 50% al finalizar" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="garantia">Garantía/revisiones:</label>
+    <input type="text" id="garantia" name="garantia" value="Soporte por 15 días post-entrega" required />
+  </div>
+  
+  <div class="form-group">
+    <label for="propiedad">Propiedad intelectual:</label>
+    <input type="text" id="propiedad" name="propiedad" value="Cliente retiene todos los derechos" required />
+  </div>
+  
+  <button type="submit" class="submit-btn">Generar Cotización PDF</button>
+</form>
+
+<style>
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  textarea {
+    height: 80px;
+  }
+  
+  .submit-btn {
+    background-color: #0066cc;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0055aa;
+  }
+  
+  h3 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #0066cc;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+  }
+</style>
